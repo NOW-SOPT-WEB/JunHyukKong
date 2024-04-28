@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components';
+import theme from '../../theme';
 
 function Header(){
 
@@ -24,8 +25,9 @@ const CardGameHeader = styled.header`
   position:fixed;
   top:0px;
   
-  background-color: black;
-  color: white;
+  background-color: ${theme.colors.black};
+  color: ${theme.colors.white};
+  font-size: ${theme.fonts.xl};
   
 `;
 
