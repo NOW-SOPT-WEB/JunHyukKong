@@ -17,5 +17,12 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    "react/self-closing-comp": [ //자동으로 닫게 룰 추가 
+      "error",
+      {
+        "component": true,
+        "html": true
+      }
+    ], 
   },
 }
