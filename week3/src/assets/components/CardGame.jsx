@@ -37,10 +37,15 @@ function CardGame(){
     }
     
     const returnArr = [];
-    while(false) //length만큼 채울 때까지 반복
+    console.log(returnArr.length);
+    console.log(length);
+    console.log(returnArr.length < length);
+    
+    while(returnArr.length < length) //length만큼 채울 때까지 반복 -> 무한 루프...발생
     {
-      const index = Math.random() * CARDLIST_len;
+      const index = Math.floor(Math.random() * CARDLIST_len); //알고보니 index문제 때문이었음
       const randomCard = CARDLIST[index];
+      console.log("여기까진 이상 무");
 
       if(!returnArr.includes(randomCard)){ //해당 카드가 이미 포함되어 있다면 추가 과정 생략
         returnArr.push(CARDLIST[index]);
@@ -67,7 +72,7 @@ function CardGame(){
 
     setCardList(nowCardList);//카드 설정
   }
-  , [mode, getRandomList, shuffleArr, cardList]); //변할 때를 잘 작성을 해주어야 경고가 안 뜸.
+  , [mode]); //변할 때를 잘 작성을 해주어야 경고가 안 뜸. 또한, 내부에서 변경하는 값을 dependency로 하면 무한 루프 발생.
 
   // Card 컴포넌트까지 prop으로 내려줄 함수.
   // 현재 선택된 카드의 id를 확인하여, firstCard 혹은 secondCard 상태에 넣어둠 -> prop으로 쭉 내려줘서 Card 컴포넌트에서 사용할 예정
