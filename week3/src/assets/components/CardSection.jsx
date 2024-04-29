@@ -4,17 +4,19 @@ import theme from '../../theme';
 import Card from './Card';
 
 function CardSection({cardList, openCards, onCardFunc}){
-  const date = new Date();
   let isOpen = false;
   return (
   <StyledCardSection>
-    {cardList.map((obj)=>{
+    {cardList.map((obj, idx)=>{
       openCards.includes(obj.id) ? isOpen = true : isOpen = false //만약 openCards 배열안에 obj.id가 포함되어 있다면
-      
-      return <Card key={date.getSeconds + obj.id} id={obj.id} imgSrc={obj.imgSrc} isOpen={isOpen} onCardFunc = {onCardFunc} />
+      //let randomKey = toString(Symbol());
+      return(
+          <Card key ={`Card${idx}`} uniqueId={`Card${idx}`} id={obj.id} imgSrc={obj.imgSrc} isOpen={isOpen} onCardFunc = {onCardFunc} />
+      );
     })}
   </StyledCardSection>); //map해서 card 리턴하는 로직
 }
+
 
 const StyledCardSection = styled.section`
 
