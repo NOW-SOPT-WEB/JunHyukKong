@@ -20,6 +20,8 @@ const LineDiv = styled.div`
 `;
 
 const CardGameHeader = styled.header`
+  z-index: 1;
+  
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;

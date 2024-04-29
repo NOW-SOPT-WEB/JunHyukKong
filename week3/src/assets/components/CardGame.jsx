@@ -15,6 +15,7 @@ function CardGame(){
   const [checkArr, setCheckArr] = useState([]); //두개의 카드의 id,key값을 넣어 선택 가능한지, 등등 넣을 예정
   const [openCards, setOpenCards] = useState([]); //열린 카드(정답을 맞춘 카드)의 id를 저장할 배열
   const [score, setScore] = useState(0); //처음에는 useRef사용할까 했는데.. 계속 변해야하니까 상태가 맞음
+  const [flipedCards, setFlipCards] = useState([]);
 
   //cardList가 변할때(아예 mode가 변하면서 리렌더링될 때)
   const getRandomList = useCallback((mode, CARDLIST) => {
@@ -79,6 +80,7 @@ function CardGame(){
   const selectCard = (id,key) => {
     if(checkArr.length === 0)
     {
+      setFlipCards([]); //빈배열로 초기화
       checkArr.push({id,key});
     }
     else if(checkArr.length ===1) //만약 이미 1개는 들어가 있다면
@@ -86,11 +88,15 @@ function CardGame(){
       if(checkArr[0].key !== key) //첫번째 카드와 key값이 같은지 비교 (다를 때 넣어줌)
       {
         checkArr.push({id, key});
-
-        (checkArr[0].id === checkArr[1].id) ? //선택한 둘의 카드 id가 같다면 score++; 해당 카드 객체를 openCards에 추가, 그리고 checkArr 초기화.
-        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>[...openCards, checkArr[0].id]), setCheckArr([]))  
+        console.log("현재 길이가 2인 checkArr:" , checkArr);
+        
+        (checkArr[0].id === checkArr[1].id) ? //선택한 둘의 카드 id가 같다면 score++; 해당 카드 객체의 id를 openCards에 추가, 그리고 checkArr 초기화.
+        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>[...openCards, checkArr[0].id]), setCheckArr([]))  //state를 직접 수정하지 않아야 한다. 따라서 push사용 불가
         : 
-        (setCheckArr([])); 
+        //만약 둘이 서로 다를경우, 그 둘의 카드의 key를 filpCards 배열에 넣어둠. 추후, Card컴포넌트에서 본인의 uniqueId가 flipCards에 포함되어있는지 확인, (몇초 뒤) 포함되어 있다면 다시 돌려줌
+        (setFlipCards(([checkArr[0].key, checkArr[1].key]), console.log("checkArr에 2개가 들어갔을때의 플립카드 : ",flipedCards) ,setCheckArr([]) )); //만약 다를 경우, 카드 둘 다시 뒤집어주고, checkArr 초기화
+
+        console.log("현재 길이가 초기화된 checkArr:" , checkArr);
       }
     }
     console.log("현재 openCards: ", openCards);
@@ -100,7 +106,9 @@ function CardGame(){
 
   const goal = useRef(5); //점수 매번 초기화 되지 않도록(렌더링에 상관없이 유지하도록) useRef 활용 (매번 반영되어야하면 state로)
   const modeHandle = useCallback((e) => { //매번 함수 렌더링될때마다 정의하지 않도록 useCallback 사용
-    setMode(e.currentTarget.innerText);
+    setMode(e.currentTarget.innerText); //해당 모드로 변경
+    setScore(0); //점수도 초기화
+    
     switch(e.currentTarget.innerText)
     {
       case "easy" :
@@ -118,17 +126,22 @@ function CardGame(){
   }, []);
 
   return (
-    <>
+    <CardGameWrapper>
       <Header score={score} goal={goal.current}/>
       <ModeSelect>
         <ModeBtn modeString={"easy"} modeHandle={modeHandle} />
         <ModeBtn modeString={"normal"} modeHandle={modeHandle} />
         <ModeBtn modeString={"hard"} modeHandle={modeHandle} />
       </ModeSelect>
-      <CardSection cardList={cardList} openCards={openCards} onCardFunc = {selectCard}  />
-    </>
+      <CardSection cardList={cardList} openCards={openCards} onCardFunc = {selectCard} flipedCards = {flipedCards} />
+    </CardGameWrapper>
   );
 }
+
+//트러블슈팅(Troble Shotting) 왜 이 div의 height가 자식요소에 맞게 완전히 커지지 않는가? 
+const CardGameWrapper = styled.div`
+  background-color: ${theme.colors.aliceblue};
+`;
 
 const ModeSelect = styled.div`
   display: flex;
@@ -140,7 +153,9 @@ const ModeSelect = styled.div`
   top: 20vh;
   
   width: 100vw;
-  height: 20vh;
+  height: 10vh;
+
+  z-index: 1;
 
   font-size: ${theme.fonts.md};
 `;
