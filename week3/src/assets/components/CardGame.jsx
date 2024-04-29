@@ -12,8 +12,8 @@ function CardGame(){
   //useState의 init값은 아무리 리렌더링 된다고 해도 '딱 첫 렌더링에만' 초기값(init)이 할당된다.
   const [mode, setMode] = useState("easy"); //배열이기 때문에, const 선언 가능
   const [cardList, setCardList] = useState([]);
-  const [checkArr, setCheckArr] = useState([]);
-  const [openCards, setOpenCards] = useState([]); //열린 카드(정답을 맞춘 카드) 저장할 배열
+  const [checkArr, setCheckArr] = useState([]); //두개의 카드의 id,key값을 넣어 선택 가능한지, 등등 넣을 예정
+  const [openCards, setOpenCards] = useState([]); //열린 카드(정답을 맞춘 카드)의 id를 저장할 배열
   const [score, setScore] = useState(0); //처음에는 useRef사용할까 했는데.. 계속 변해야하니까 상태가 맞음
 
   //cardList가 변할때(아예 mode가 변하면서 리렌더링될 때)
@@ -37,7 +37,7 @@ function CardGame(){
     }
     
     const returnArr = [];
-    while(returnArr.length < length) //length만큼 채울 때까지 반복
+    while(false) //length만큼 채울 때까지 반복
     {
       const index = Math.random() * CARDLIST_len;
       const randomCard = CARDLIST[index];
@@ -83,7 +83,7 @@ function CardGame(){
         checkArr.push({id, key});
 
         (checkArr[0].id === checkArr[1].id) ? //선택한 둘의 카드 id가 같다면 score++; 해당 카드 객체를 openCards에 추가, 그리고 checkArr 초기화.
-        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>{openCards.push(checkArr[0])}),setCheckArr([]))  
+        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>{openCards.push(checkArr[0].id)}),setCheckArr([]))  
         : 
         setCheckArr([]); 
       }

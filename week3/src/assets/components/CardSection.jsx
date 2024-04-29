@@ -17,6 +17,12 @@ function CardSection({cardList, openCards, onCardFunc}){
 }
 
 const StyledCardSection = styled.section`
+
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+
   width: 100vw;
   min-height: 60vh;
 
