@@ -9,7 +9,7 @@ function Card({uniqueId, id, imgSrc, isOpen, onCardFunc, flipedCards}) {
   const [isFront, setIsFront] = useState(isOpen); //카드가 앞면인지 뒷면인지 -> 별로 좋은 코드는 아님(props로 상태를 받아오는게 좋지는 않음)
   const cantFilp = isOpen; //다시 뒤집을 수 있는지 저장하는 변수 (true일시, 다시는 뒤집을 수 없음)
   
-  if(!cantFilp){ //포함되어 있는게 아니라면
+  if(!cantFilp){ //포함되어 있는게 아니라면 --이것도 꽤 중요함
     console.log("현재 카드가 렌더링될 때 flipCards 배열은", flipedCards);
     let willFilp = false;
     if(flipedCards.includes(uniqueId))

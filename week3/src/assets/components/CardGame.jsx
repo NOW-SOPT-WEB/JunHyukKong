@@ -78,9 +78,9 @@ function CardGame(){
   // Card 컴포넌트까지 prop으로 내려줄 함수.
   // 현재 선택된 카드의 id를 확인하여, firstCard 혹은 secondCard 상태에 넣어둠 -> prop으로 쭉 내려줘서 Card 컴포넌트에서 사용할 예정
   const selectCard = (id,key) => {
+    setFlipCards([]); //빈배열로 초기화 ->>>>>>>>>>>>>이거 덕분에 이제 하나만 선택해도 뒤집히는거 거의 해결됨(아직 같은쌍은 해결 안됨)
     if(checkArr.length === 0)
     {
-      setFlipCards([]); //빈배열로 초기화
       checkArr.push({id,key});
     }
     else if(checkArr.length ===1) //만약 이미 1개는 들어가 있다면
@@ -95,7 +95,8 @@ function CardGame(){
         : 
         //만약 둘이 서로 다를경우, 그 둘의 카드의 key를 filpCards 배열에 넣어둠. 추후, Card컴포넌트에서 본인의 uniqueId가 flipCards에 포함되어있는지 확인, (몇초 뒤) 포함되어 있다면 다시 돌려줌
         (setFlipCards(([checkArr[0].key, checkArr[1].key]), console.log("checkArr에 2개가 들어갔을때의 플립카드 : ",flipedCards) ,setCheckArr([]) )); //만약 다를 경우, 카드 둘 다시 뒤집어주고, checkArr 초기화
-
+        
+        
         console.log("현재 길이가 초기화된 checkArr:" , checkArr);
       }
     }
