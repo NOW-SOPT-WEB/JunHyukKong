@@ -9,7 +9,6 @@ function CardSection({cardList, openCards, onCardFunc}){
   <StyledCardSection>
     {cardList.map((obj, idx)=>{
       openCards.includes(obj.id) ? isOpen = true : isOpen = false //만약 openCards 배열안에 obj.id가 포함되어 있다면
-      //let randomKey = toString(Symbol());
       return(
           <Card key ={`Card${idx}`} uniqueId={`Card${idx}`} id={obj.id} imgSrc={obj.imgSrc} isOpen={isOpen} onCardFunc = {onCardFunc} />
       );

@@ -14,7 +14,6 @@ function Header({score, goal}){
     
   </>); //헤더 관련된 내용들을 리턴하는 형식
 }
-
 const LineDiv = styled.div`
   width: 100%;
   text-align: center;
