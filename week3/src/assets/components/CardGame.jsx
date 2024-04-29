@@ -17,7 +17,6 @@ function CardGame(){
   const [score, setScore] = useState(0); //처음에는 useRef사용할까 했는데.. 계속 변해야하니까 상태가 맞음
 
   //cardList가 변할때(아예 mode가 변하면서 리렌더링될 때)
-
   const getRandomList = useCallback((mode, CARDLIST) => {
     const CARDLIST_len = 16;
     let length;
@@ -50,11 +49,25 @@ function CardGame(){
     return returnArr;
   },[]);
 
-  useEffect(()=> {
-    let nowCardList = getRandomList(mode, CARDLIST);
-    setCardList(nowCardList);
+  /*
+    반환값이 음수일 때, a가 b보다 앞에 있어야한다.
+    반환값이 0일 때, 순서를 바꾸지 않는다.
+    반환값이 양수일 떄, b가 a보다 앞에 있는다
+    C++은 단순 true/false로 비교함수를 사용하는데 js는 조금 다른가보다.
+   */
+  const shuffleArr = useCallback((arr)=> {
+    arr.sort(()=>Math.random() - 0.5); //0이상 1미만 까지의 숫자이므로 -0.5~0.5의 값을 이용하낟.
   }
-  , [mode, getRandomList, cardList]); //변할 때를 잘 작성을 해주어야 경고가 안 뜸.
+  ,[])
+
+  useEffect(()=> {
+    let nowCardList = getRandomList(mode, CARDLIST);//랜덤으로 현재 mode에 맞게 카드 개수를 맞춰 뽑아옴
+    nowCardList.push(...nowCardList); //2배로 복사
+    shuffleArr(nowCardList); //랜덤으로 섞어줌
+
+    setCardList(nowCardList);//카드 설정
+  }
+  , [mode, getRandomList, shuffleArr, cardList]); //변할 때를 잘 작성을 해주어야 경고가 안 뜸.
 
   // Card 컴포넌트까지 prop으로 내려줄 함수.
   // 현재 선택된 카드의 id를 확인하여, firstCard 혹은 secondCard 상태에 넣어둠 -> prop으로 쭉 내려줘서 Card 컴포넌트에서 사용할 예정
