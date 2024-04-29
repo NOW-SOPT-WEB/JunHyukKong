@@ -32,7 +32,7 @@ function CardGame(){
     firstCard[0] ? setSecondCard(id) : setFirstCard(id);  
   };
   *************************************/
-  const goal = useRef(0); //점수 매번 초기화 되지 않도록(렌더링에 상관없이 유지하도록) useRef 활용
+  const goal = useRef(5); //점수 매번 초기화 되지 않도록(렌더링에 상관없이 유지하도록) useRef 활용
   const modeHandle = useCallback((e) => { //매번 함수 렌더링될때마다 정의하지 않도록 useCallback 사용
     setMode(e.currentTarget.innerText);
     switch(e.currentTarget.innerText)
