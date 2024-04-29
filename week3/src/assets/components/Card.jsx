@@ -3,14 +3,12 @@ import styled from 'styled-components';
 
 
 function Card({uniqueId, id, imgSrc, isOpen, onCardFunc}) {  
-  console.log(imgSrc);
 
   const [isFront, setIsFront] = useState(isOpen); //카드가 앞면인지 뒷면인지
   const cantFilp = isOpen; //다시 뒤집을 수 있는지 저장하는 변수 (true일시, 다시는 뒤집을 수 없음)
   
   const handleCard = () => 
   {
-    console.log("Card 클릭");
     if(!cantFilp)
     {
       setIsFront(!isFront);

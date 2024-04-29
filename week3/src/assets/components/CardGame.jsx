@@ -88,11 +88,14 @@ function CardGame(){
         checkArr.push({id, key});
 
         (checkArr[0].id === checkArr[1].id) ? //선택한 둘의 카드 id가 같다면 score++; 해당 카드 객체를 openCards에 추가, 그리고 checkArr 초기화.
-        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>{openCards.push(checkArr[0].id)}), console.log(openCards, checkArr), setCheckArr([]))  
+        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>[...openCards, checkArr[0].id]), setCheckArr([]))  
         : 
-        (setCheckArr([]), console.log(openCards, checkArr)); 
+        (setCheckArr([])); 
       }
     }
+    console.log("현재 openCards: ", openCards);
+    console.log("현재 checkArr: ", checkArr);
+
   };
 
   const goal = useRef(5); //점수 매번 초기화 되지 않도록(렌더링에 상관없이 유지하도록) useRef 활용 (매번 반영되어야하면 state로)
