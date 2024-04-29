@@ -12,27 +12,72 @@ function CardGame(){
   //useState의 init값은 아무리 리렌더링 된다고 해도 '딱 첫 렌더링에만' 초기값(init)이 할당된다.
   const [mode, setMode] = useState("easy"); //배열이기 때문에, const 선언 가능
   const [cardList, setCardList] = useState([]);
-  const [firstCard, setFirstCard] = useState(null);
-  const [secondCard, setSecondCard] = useState(null);
+  const [checkArr, setCheckArr] = useState([]);
+  const [openCards, setOpenCards] = useState([]); //열린 카드(정답을 맞춘 카드) 저장할 배열
   const [score, setScore] = useState(0); //처음에는 useRef사용할까 했는데.. 계속 변해야하니까 상태가 맞음
 
-  /************** 이 부분 정의 해야함 *********
   //cardList가 변할때(아예 mode가 변하면서 리렌더링될 때)
-  useEffect(()=> {}
-  , [cardList]);
 
-  //firstCard, secondCard 상태가 변할 때마다 둘이 같은지 체크해보는 로직
-  useEffect(()=>{
+  const getRandomList = useCallback((mode, CARDLIST) => {
+    const CARDLIST_len = 16;
+    let length;
+    switch(mode)
+    {
+      case "easy":
+        length = 5;
+        break;
+      case "normal":
+        length = 7;
+        break;
+      case "hard":
+        length = 9;
+        break;
+      default:
+        console.log("Error in getRandomList");
+        break;
+    }
+    
+    const returnArr = [];
+    while(returnArr.length < length) //length만큼 채울 때까지 반복
+    {
+      const index = Math.random() * CARDLIST_len;
+      const randomCard = CARDLIST[index];
+
+      if(!returnArr.includes(randomCard)){ //해당 카드가 이미 포함되어 있다면 추가 과정 생략
+        returnArr.push(CARDLIST[index]);
+      }
+    }
+    return returnArr;
+  },[]);
+
+  useEffect(()=> {
+    let nowCardList = getRandomList(mode, CARDLIST);
+    setCardList(nowCardList);
   }
-  , [firstCard, secondCard]);
+  , [mode, getRandomList, cardList]); //변할 때를 잘 작성을 해주어야 경고가 안 뜸.
 
-
+  // Card 컴포넌트까지 prop으로 내려줄 함수.
   // 현재 선택된 카드의 id를 확인하여, firstCard 혹은 secondCard 상태에 넣어둠 -> prop으로 쭉 내려줘서 Card 컴포넌트에서 사용할 예정
-  const selectCard = (id) => {
-    firstCard[0] ? setSecondCard(id) : setFirstCard(id);  
+  const selectCard = (id,key) => {
+    if(checkArr.length === 0)
+    {
+      checkArr.push({id,key});
+    }
+    else if(checkArr.length ===1) //만약 이미 1개는 들어가 있다면
+    {
+      if(checkArr[0].key !== key) //첫번째 카드와 key값이 같은지 비교 (다를 때 넣어줌)
+      {
+        checkArr.push({id, key});
+
+        (checkArr[0].id === checkArr[1].id) ? //선택한 둘의 카드 id가 같다면 score++; 해당 카드 객체를 openCards에 추가, 그리고 checkArr 초기화.
+        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>{openCards.push(checkArr[0])}),setCheckArr([]))  
+        : 
+        setCheckArr([]); 
+      }
+    }
   };
-  *************************************/
-  const goal = useRef(5); //점수 매번 초기화 되지 않도록(렌더링에 상관없이 유지하도록) useRef 활용
+
+  const goal = useRef(5); //점수 매번 초기화 되지 않도록(렌더링에 상관없이 유지하도록) useRef 활용 (매번 반영되어야하면 state로)
   const modeHandle = useCallback((e) => { //매번 함수 렌더링될때마다 정의하지 않도록 useCallback 사용
     setMode(e.currentTarget.innerText);
     switch(e.currentTarget.innerText)
@@ -59,7 +104,7 @@ function CardGame(){
         <ModeBtn modeString={"normal"} modeHandle={modeHandle} />
         <ModeBtn modeString={"hard"} modeHandle={modeHandle} />
       </ModeSelect>
-      <CardSection/>
+      <CardSection cardList={cardList} openCards={openCards} onCardFunc = {selectCard}  />
     </>
   );
 }
