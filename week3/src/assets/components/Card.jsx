@@ -7,15 +7,16 @@ function Card({idx, selectCard, imgSrc, isFlipped, clickedCards}) {
     selectCard(parseInt(idx));
     console.log("카드에서 찍는 ", clickedCards);
     }
-
+  
+  //클릭하지 못하게 할 때 사용될 함수
   const cantClick = () =>
   {
     console.log("더 이상 클릭할 수 없습니다.");
-  }
+  } 
   return (
     <>
       <CardWrapper 
-        onClick={isFlipped? cantClick : handleCard} //이미 돌아가 있는거라면 더 클릭하지 못하게 만듬
+        onClick={isFlipped? cantClick : handleCard} //이미 돌아가 있는거라면(오픈되어 있다면) 더 클릭하지 못하게 만듬
         $isFlipped = {isFlipped}
       >
         <FrontImg src={imgSrc} alt='front' />

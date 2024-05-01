@@ -14,7 +14,7 @@ function Header({score, goal, resetCurrentMode}){
       <LineDiv>{`${score} / ${goal}`}</LineDiv>
     </CardGameHeader>
     
-  </>); //헤더 관련된 내용들을 리턴하는 형식
+  </>); 
 }
 const ResetBtn = styled.button`
   position: absolute;

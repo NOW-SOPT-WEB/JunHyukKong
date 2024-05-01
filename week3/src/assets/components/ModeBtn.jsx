@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import theme from "../../theme";
 
-
 function ModeBtn({modeString, modeHandle}){
   return(
     <StyledBtn onClick={modeHandle}>{modeString}</StyledBtn>
