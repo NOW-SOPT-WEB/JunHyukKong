@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import styled from 'styled-components';
-import theme from '../../theme';
 import Card from './Card';
 
 function CardSection({renderedCards, clickedCards, selectCard}){

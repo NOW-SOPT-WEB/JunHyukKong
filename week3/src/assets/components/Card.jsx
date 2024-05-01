@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import styled from 'styled-components';
 
 //filp = true/false (매칭여부에 따라서 결정된 값)

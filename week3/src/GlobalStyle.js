@@ -1,6 +1,6 @@
 import { createGlobalStyle, css } from "styled-components";
 import reset from "styled-reset";
-
+//reset은 기본 reset값을 이용한다.
 const GlobalStyle = createGlobalStyle`
 ${reset}
 *{
