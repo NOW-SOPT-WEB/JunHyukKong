@@ -4,17 +4,34 @@ import theme from '../../theme';
 
 
 //컴포넌트는 인자를 항상 {}로 받는 것을 잊지 말자! (혹은 props 객체 하나로)
-function Header({score, goal}){
+function Header({score, goal, resetCurrentMode}){
   return(
   <>
     <CardGameHeader>
-      <LineDiv>앨범 카드 맞추기 게임</LineDiv>
+      <LineDiv>
+        <p>앨범 카드 맞추기 게임</p>
+        <ResetBtn onClick={resetCurrentMode}>Reset</ResetBtn>
+      </LineDiv>
       <LineDiv>{`${score} / ${goal}`}</LineDiv>
     </CardGameHeader>
     
   </>); //헤더 관련된 내용들을 리턴하는 형식
 }
+const ResetBtn = styled.button`
+  position: absolute;
+  right: 100px;
+
+  width: 10%;
+  &:hover{
+    background-color: pink;
+  }
+`;
+
 const LineDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   width: 100%;
   text-align: center;
 `;

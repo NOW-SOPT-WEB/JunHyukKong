@@ -5,21 +5,26 @@ import Header from './Header';
 import CardSection from './CardSection';
 import ModeBtn from './ModeBtn';
 import CARDLIST from '../js/utils/CARDLIST';
+import CompleteModal from './CompleteModal';
 
-
+/*깊은 복사 얕은 복사 주의....... */
 
 function CardGame(){
   //useState의 init값은 아무리 리렌더링 된다고 해도 '딱 첫 렌더링에만' 초기값(init)이 할당된다.
   const [mode, setMode] = useState("easy"); //배열이기 때문에, const 선언 가능
-  const [cardList, setCardList] = useState([]);
-  const [checkArr, setCheckArr] = useState([]); //두개의 카드의 id,key값을 넣어 선택 가능한지, 등등 넣을 예정
-  const [openCards, setOpenCards] = useState([]); //열린 카드(정답을 맞춘 카드)의 id를 저장할 배열
   const [score, setScore] = useState(0); //처음에는 useRef사용할까 했는데.. 계속 변해야하니까 상태가 맞음
-  const [flipedCards, setFlipCards] = useState([]);
+  const [renderedCards, setRenderedCards] = useState([]); //렌더링될 카드 객체들
+  const [clickedCards, setClickedCards] = useState([]); //idx만 담음
+  const [complete, setComplete] = useState(false); //성공 여부
+
 
   //cardList가 변할때(아예 mode가 변하면서 리렌더링될 때)
   const getRandomList = useCallback((mode, CARDLIST) => {
     const CARDLIST_len = 16;
+    //const initCards = [...CARDLIST]; //이거 필수! 아니면 참조에 의한 호출로, 상수 데이터가 변함 -> 요소가 객체이므로 얕은 복사가 일어남!! 주의!!
+    //const initCards = Object.assign([], CARDLIST); -> 객체의 중첩이면 여전히 얕은 복사
+    const initCards = JSON.parse(JSON.stringify(CARDLIST)); //따라서 아예, 내용물 전체를 문자열화시킨 뒤 다시 되돌리는 방식으로 사용하자.
+
     let length;
     switch(mode)
     {
@@ -36,74 +41,148 @@ function CardGame(){
         console.log("Error in getRandomList");
         break;
     }
-    
-    const returnArr = [];
-    console.log(returnArr.length);
-    console.log(length);
-    console.log(returnArr.length < length);
-    
-    while(returnArr.length < length) //length만큼 채울 때까지 반복 -> 무한 루프...발생
+    const modeCards = [];
+  
+    while(modeCards.length < length) //length만큼 채울 때까지 반복
     {
-      const index = Math.floor(Math.random() * CARDLIST_len); //알고보니 index문제 때문이었음
-      const randomCard = CARDLIST[index];
-      console.log("여기까진 이상 무");
+      const index = Math.floor(Math.random() * CARDLIST_len); 
+      const randomCard = initCards[index];
 
-      if(!returnArr.includes(randomCard)){ //해당 카드가 이미 포함되어 있다면 추가 과정 생략
-        returnArr.push(CARDLIST[index]);
+      if(!modeCards.includes(randomCard)){ //해당 카드가 이미 포함되어 있다면 추가 과정 생략
+        modeCards.push(initCards[index]);
       }
     }
-    return returnArr;
+    return modeCards;
   },[]);
 
-  /*
-    반환값이 음수일 때, a가 b보다 앞에 있어야한다.
-    반환값이 0일 때, 순서를 바꾸지 않는다.
-    반환값이 양수일 떄, b가 a보다 앞에 있는다
-    C++은 단순 true/false로 비교함수를 사용하는데 js는 조금 다른가보다.
-   */
+ 
   const shuffleArr = useCallback((arr)=> {
     arr.sort(()=>Math.random() - 0.5); //0이상 1미만 까지의 숫자이므로 -0.5~0.5의 값을 이용하낟.
   }
   ,[])
 
-  useEffect(()=> {
-    let nowCardList = getRandomList(mode, CARDLIST);//랜덤으로 현재 mode에 맞게 카드 개수를 맞춰 뽑아옴
-    nowCardList.push(...nowCardList); //2배로 복사
-    shuffleArr(nowCardList); //랜덤으로 섞어줌
+  useEffect(()=> { //mode가 변할때마다 새롭게 renderedCards 구성
+    let modeCards = getRandomList(mode, CARDLIST);//랜덤으로 현재 mode에 맞게 카드 개수를 맞춰 뽑아옴
+    modeCards.push(...modeCards); //2배로 복사
+    shuffleArr(modeCards); //랜덤으로 섞어줌
 
-    setCardList(nowCardList);//카드 설정
+    setRenderedCards(modeCards);//렌더링할 카드 최종 설정
+    setClickedCards([]);
+    setComplete(false);
+    setScore(0);
   }
-  , [mode]); //변할 때를 잘 작성을 해주어야 경고가 안 뜸. 또한, 내부에서 변경하는 값을 dependency로 하면 무한 루프 발생.
+  , [mode]); 
 
-  // Card 컴포넌트까지 prop으로 내려줄 함수.
-  // 현재 선택된 카드의 id를 확인하여, firstCard 혹은 secondCard 상태에 넣어둠 -> prop으로 쭉 내려줘서 Card 컴포넌트에서 사용할 예정
-  const selectCard = (id,key) => {
-    setFlipCards([]); //빈배열로 초기화 ->>>>>>>>>>>>>이거 덕분에 이제 하나만 선택해도 뒤집히는거 거의 해결됨(아직 같은쌍은 해결 안됨)
-    if(checkArr.length === 0)
-    {
-      checkArr.push({id,key});
+  function resetCurrentMode(){
+    let modeCards = getRandomList(mode, CARDLIST);//랜덤으로 현재 mode에 맞게 카드 개수를 맞춰 뽑아옴
+    modeCards.push(...modeCards); //2배로 복사
+    shuffleArr(modeCards); //랜덤으로 섞어줌
+
+    setRenderedCards(modeCards);//렌더링할 카드 최종 설정
+    setClickedCards([]);
+    setComplete(false);
+    setScore(0);
+  }
+
+  //clickedCards가 변할때마다, renderedCards의 모든 구성물이 true인지 파악해봄
+  useEffect(()=>{
+    if(renderedCards.every((obj)=>obj.status === true)) {
+      setComplete(true);
+      console.log("전부 맞췄습니다.");
     }
-    else if(checkArr.length ===1) //만약 이미 1개는 들어가 있다면
+  }, [renderedCards])
+
+  /*
+  useEffect(()=>{    
+    if(score === goal) {
+      setComplete(true);
+      console.log("전부 맞췄습니다.");
+    }
+  }, [score]);
+  */
+
+  //complete 플래그가 변하면, 성공 모달을 띄우거나 내림.
+  useEffect(()=> {
+    //작성 필요
+  },[complete])
+
+  /*
+    계속 renderedCards[clickedCards[1]].id에 에러 생김 .......................
+  */
+
+  const selectCard = (idx) => { //idx값을 key값으로 받았을 거임가지고 있을거임
+    console.log("selectCard 호출!");
+    if(clickedCards.length === 0) //아직 2개가 안되었다면
     {
-      if(checkArr[0].key !== key) //첫번째 카드와 key값이 같은지 비교 (다를 때 넣어줌)
+      console.log("1번쨰 카드 들어간다~");
+      setClickedCards((prev)=> [...prev, idx]); //딱 렌더링된 카드의 번호를 넣어줌
+      console.log("추가된 clickedCards: ",clickedCards);
+    }
+    else if(clickedCards.length === 1) //1개가 들어갔으면
+    {
+      if(!clickedCards.includes(idx)) //눌려진적 없는 카드라면(첫번째때 누른 카드가 아니라면)
       {
-        checkArr.push({id, key});
-        console.log("현재 길이가 2인 checkArr:" , checkArr);
-        
-        (checkArr[0].id === checkArr[1].id) ? //선택한 둘의 카드 id가 같다면 score++; 해당 카드 객체의 id를 openCards에 추가, 그리고 checkArr 초기화.
-        (setScore((prev)=>(prev+1)), setOpenCards((openCards)=>[...openCards, checkArr[0].id]), setCheckArr([]))  //state를 직접 수정하지 않아야 한다. 따라서 push사용 불가
-        : 
-        //만약 둘이 서로 다를경우, 그 둘의 카드의 key를 filpCards 배열에 넣어둠. 추후, Card컴포넌트에서 본인의 uniqueId가 flipCards에 포함되어있는지 확인, (몇초 뒤) 포함되어 있다면 다시 돌려줌
-        (setFlipCards(([checkArr[0].key, checkArr[1].key]), console.log("checkArr에 2개가 들어갔을때의 플립카드 : ",flipedCards) ,setCheckArr([]) )); //만약 다를 경우, 카드 둘 다시 뒤집어주고, checkArr 초기화
-        
-        
-        console.log("현재 길이가 초기화된 checkArr:" , checkArr);
+        console.log("2번쨰 카드 들어간다~");
+        setClickedCards((prev)=> [...prev, idx]); //딱 렌더링된 카드의 번호를 넣어줌
+        console.log("추가된 clickedCards: ",clickedCards);
+        console.log("renderedCards[clickedCards[0]].id: ",renderedCards[clickedCards[0]].id, typeof(renderedCards[clickedCards[0]].id));
+        //console.log("renderedCards[clickedCards[1]].id: ",renderedCards[clickedCards[1]].id, typeof(renderedCards[clickedCards[1]].id));
       }
     }
-    console.log("현재 openCards: ", openCards);
-    console.log("현재 checkArr: ", checkArr);
-
+    
   };
+
+  //clickedCards 지켜보고 있다가, 길이가 2가 되는 순간 로직 실행 (필수임. 렌더링 흐름과 달리, 즉시 반영함.)
+  useEffect(()=> {
+    if(clickedCards.length === 1)
+    {
+      console.log("현재 renderedCards: ", renderedCards);
+      //const updatedCards = [...renderedCards];
+      const updatedCards = JSON.parse(JSON.stringify(renderedCards));
+      console.log("현재 clickedCards[0]: ", clickedCards[0]);
+      console.log("현재 updatedCards: ", updatedCards);
+      updatedCards[clickedCards[0]].status = true;
+      setRenderedCards(updatedCards);
+      console.log("이펙트에서 업데이트된 RederedCards", renderedCards);
+    }
+    else if(clickedCards.length === 2)
+    {
+      //const updatedCards = [...renderedCards];
+      const updatedCards = JSON.parse(JSON.stringify(renderedCards));
+      updatedCards[clickedCards[1]].status = true;
+      setRenderedCards(updatedCards);
+
+      if(renderedCards[clickedCards[0]].id === renderedCards[clickedCards[1]].id)
+        {
+          //해당 idx에서의 카드 둘이 같은 id값을 가지고 있다면(일치한다면)
+          //const updatedCards = [...renderedCards];
+          const updatedCards = JSON.parse(JSON.stringify(renderedCards));
+          updatedCards[clickedCards[0]].status = true;
+          updatedCards[clickedCards[1]].status = true;
+          console.log("true로 몇개 바뀐 updatedCards: ", updatedCards);
+          setRenderedCards(updatedCards);
+          setScore((prev)=>prev+1);
+          //renderedCards(clickedCards[1]).status = true; 애초에 잘못됨. 인덱스는 []로 접근해야지..
+        }
+      else
+      {
+        //둘이 다른 id값을 가지고 있다면(다르다면)
+        setTimeout(()=>{
+          //const updatedCards = [...renderedCards]; 
+          const updatedCards = JSON.parse(JSON.stringify(renderedCards));
+          updatedCards[clickedCards[0]].status = false;
+          updatedCards[clickedCards[1]].status = false;
+          console.log("false로 몇개 바뀐 updatedCards: ", updatedCards);
+          setRenderedCards(updatedCards);
+        }
+        ,500)
+      }
+      setClickedCards([]); //빈 배열로 초기화 (이러면서, Card가 갱신되고 새로운 render가 들어가지니까 열린 상태같은게 유지될거임 아마?)
+    }
+    console.log("clickedCard: ", clickedCards);
+    console.log("renderedCard: ", renderedCards);
+  },[clickedCards])
+
 
   const goal = useRef(5); //점수 매번 초기화 되지 않도록(렌더링에 상관없이 유지하도록) useRef 활용 (매번 반영되어야하면 state로)
   const modeHandle = useCallback((e) => { //매번 함수 렌더링될때마다 정의하지 않도록 useCallback 사용
@@ -126,21 +205,45 @@ function CardGame(){
     console.log(`현재 목표 점수는 : ${goal.current} 이다.`);
   }, []);
 
+
+  /*
+   {complete && (
+        <CompleteModal
+          resetCurrentMode = {resetCurrentMode}
+        />
+    )}
+   */
+  console.log(complete);
   return (
     <CardGameWrapper>
-      <Header score={score} goal={goal.current}/>
+      <CompleteModalWrapper>
+        {complete && (
+          <CompleteModal
+            resetCurrentMode={resetCurrentMode}
+        />
+        )}
+      </CompleteModalWrapper>
+      <Header score={score} goal={goal.current} resetCurrentMode = {resetCurrentMode}/>
       <ModeSelect>
         <ModeBtn modeString={"easy"} modeHandle={modeHandle} />
         <ModeBtn modeString={"normal"} modeHandle={modeHandle} />
         <ModeBtn modeString={"hard"} modeHandle={modeHandle} />
       </ModeSelect>
-      <CardSection cardList={cardList} openCards={openCards} onCardFunc = {selectCard} flipedCards = {flipedCards} />
+      <CardSection renderedCards={renderedCards} clickedCards={clickedCards} selectCard={selectCard}  />
     </CardGameWrapper>
   );
 }
 
+const CompleteModalWrapper = styled.div`
+  position: absolute;
+  top: 0;
+
+  z-index: 100;
+`;
+
 //트러블슈팅(Troble Shotting) 왜 이 div의 height가 자식요소에 맞게 완전히 커지지 않는가? 
 const CardGameWrapper = styled.div`
+  position: relative;
   background-color: ${theme.colors.aliceblue};
 `;
 

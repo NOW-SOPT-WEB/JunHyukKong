@@ -3,14 +3,20 @@ import styled from 'styled-components';
 import theme from '../../theme';
 import Card from './Card';
 
-function CardSection({cardList, openCards, onCardFunc, flipedCards}){
-  let isOpen = false;
+function CardSection({renderedCards, clickedCards, selectCard}){
+
   return (
   <StyledCardSection>
-    {cardList.map((obj, idx)=>{
-      openCards.includes(obj.id) ? isOpen = true : isOpen = false //만약 openCards 배열안에 obj.id가 포함되어 있다면
+    {renderedCards.map((obj, idx)=>{
       return(
-          <Card key ={`Card${idx}`} uniqueId={`Card${idx}`} id={obj.id} imgSrc={obj.imgSrc} isOpen={isOpen} onCardFunc = {onCardFunc} flipedCards = {flipedCards} />
+          <Card 
+          key ={`card-${idx}`} 
+          idx = {`${idx}`} 
+          selectCard ={clickedCards.length < 2 ? selectCard: null} 
+          imgSrc={obj.imgSrc} 
+          isFlipped = {renderedCards[idx].status}
+          clickedCards = {clickedCards}
+          />
       );
     })}
   </StyledCardSection>); //map해서 card 리턴하는 로직

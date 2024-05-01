@@ -1,69 +1,65 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components';
 
 //filp = true/false (매칭여부에 따라서 결정된 값)
-function Card({uniqueId, id, imgSrc, isOpen, onCardFunc, flipedCards}) {  
-  /*if(filp === false(매칭이 안됨)면 -> 뒷면, true면 앞면) -> 카드의 상태를 유지하는데 사용될것(뒷면인 상태로 '되돌아가게 하는데 사용해야할 것 같음',)
-  만약 참이었다면, (매칭된거니까) - 쭉, 건드릴수도 없게, 계속 앞면 상태 유지.*/
-
-  const [isFront, setIsFront] = useState(isOpen); //카드가 앞면인지 뒷면인지 -> 별로 좋은 코드는 아님(props로 상태를 받아오는게 좋지는 않음)
-  const cantFilp = isOpen; //다시 뒤집을 수 있는지 저장하는 변수 (true일시, 다시는 뒤집을 수 없음)
-  
-  if(!cantFilp){ //포함되어 있는게 아니라면 --이것도 꽤 중요함
-    console.log("현재 카드가 렌더링될 때 flipCards 배열은", flipedCards);
-    let willFilp = false;
-    if(flipedCards.includes(uniqueId))
-    {
-      willFilp= true;
-      flipedCards = [];
+function Card({idx, selectCard, imgSrc, isFlipped, clickedCards}) {  
+  const handleCard = () => {
+    console.log("handleCard이 호출!");
+    selectCard(parseInt(idx));
+    console.log("카드에서 찍는 ", clickedCards);
     }
-    if (willFilp) {
-      console.log("0.5초 뒤,",uniqueId,"를 가진 카드는 다시 뒤집힙니다.");
-      setTimeout(() => {
-        setIsFront(false); // 
-      }, 500); // 적절한 시간 간격을 설정하여 원하는 시간 후에 다시 뒤집히도록 함
-    }
-  }
 
-
-  const handleCard = () => 
+  const cantClick = () =>
   {
-    if(!cantFilp)
-    {
-      console.log(uniqueId,"를 가진 카드 선택함");
-      setIsFront(!isFront);
-      onCardFunc(id, uniqueId);
-    }
+    console.log("더 이상 클릭할 수 없습니다.");
   }
-
   return (
     <>
-      <CardWrapper onClick={handleCard}>
-      {isFront ? (
-        <FrontImg src={imgSrc} alt='front'/>
-      ) : (
-      <BackImg src = "/src/assets/react.svg" alt="back"/>
-      )}
+      <CardWrapper 
+        onClick={isFlipped? cantClick : handleCard} //이미 돌아가 있는거라면 더 클릭하지 못하게 만듬
+        $isFlipped = {isFlipped}
+      >
+        <FrontImg src={imgSrc} alt='front' />
+        <BackImg src = "/src/assets/react.svg" alt="back" />
       </CardWrapper>
     </>
   );
-}
+  }
 
 const CardWrapper = styled.div`
+  position: relative;
   width: 10rem;
   height: 10rem;
   border: 2px solid pink;
+
+  transform-style: preserve-3d; //직계 자식들이 3d 공간을 향유할 수 있도록 설정(기본값: flat)
+
+  
+  transform: ${({ $isFlipped }) =>
+    $isFlipped ? "rotateY(180deg)" : "rotateY(0)"};
+  transition: transform 0.5s ease-in-out;
 `;
 
 const FrontImg = styled.img`
+  position: absolute;
   width: 10rem;
   height: 10rem;
+
+  backface-visibility: hidden; //3d로 보았을 때, 뒷면을 보이게 할 것인지 설정
+
+  transform:  rotateY(180deg);
+  
 `;
 
 const BackImg = styled.img`
+  position: absolute;
   width: 10rem;
   height: 10rem;
+
+  backface-visibility: hidden; //3d로 보았을 때, 뒷면을 보이게 할 것인지 설정
+
+  background-color: ${({ theme }) => theme.colors.lightPurple};
 `;
 
-export default Card;
 
+export default Card;
