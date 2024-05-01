@@ -3,9 +3,7 @@ import styled from 'styled-components';
 //filp = true/false (매칭여부에 따라서 결정된 값)
 function Card({idx, selectCard, imgSrc, isFlipped, clickedCards}) {  
   const handleCard = () => {
-    console.log("handleCard이 호출!");
     selectCard(parseInt(idx));
-    console.log("카드에서 찍는 ", clickedCards);
     }
   
   //클릭하지 못하게 할 때 사용될 함수

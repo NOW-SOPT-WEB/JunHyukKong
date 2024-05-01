@@ -109,7 +109,6 @@ function CardGame(){
 
   
   const selectCard = (idx) => { //idx값은 고유한 카드의 값.
-    console.log("selectCard 호출!");
     if(clickedCards.length === 0) //처음 들어오는거라면
     {
       setClickedCards((prev)=> [...prev, idx]); //딱 렌더링된 카드의 번호를 넣어줌
@@ -184,7 +183,6 @@ function CardGame(){
   }, []);
 
 
-  console.log(complete);
   return (
     <CardGameWrapper>
       <CompleteModalWrapper>
