@@ -86,7 +86,8 @@ function CardGame(){
 
   //clickedCards가 변할때마다, renderedCards의 모든 구성물이 true인지 파악해봄
   useEffect(()=>{
-    if(renderedCards.every((obj)=>obj.status === true)) {
+    console.log("문제가 발생할만한 지점에서의 renderedCards  :", renderedCards);
+    if((renderedCards.length!==0) && renderedCards.every((obj)=>obj.status === true)) { //초기 렌더링시, 요소가 없어서 true가 나와버리는 문제 해결
       setComplete(true);
       console.log("전부 맞췄습니다.");
     }
