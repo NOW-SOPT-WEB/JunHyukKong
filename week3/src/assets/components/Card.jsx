@@ -18,7 +18,7 @@ function Card({idx, selectCard, imgSrc, isFlipped, clickedCards}) {
         $isFlipped = {isFlipped}
       >
         <FrontImg src={imgSrc} alt='front' />
-        <BackImg src = "/src/assets/react.svg" alt="back" />
+        <BackImg src = "./images/HeartBreaker.jpeg" alt="back" />
       </CardWrapper>
     </>
   );
