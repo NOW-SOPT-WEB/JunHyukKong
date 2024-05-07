@@ -123,6 +123,28 @@ function CardGame(){
     
   };
 
+  const compareCard = () => {
+    if(renderedCards[clickedCards[0]].id === renderedCards[clickedCards[1]].id) //카드 둘이 같은 id값을 가지고 있다면(일치한다면)
+      {
+        const updatedCards = JSON.parse(JSON.stringify(renderedCards)); //const updatedCards = [...renderedCards]; -> 절대 사용 x. 참조됨.
+        updatedCards[clickedCards[0]].status = true;
+        updatedCards[clickedCards[1]].status = true;
+        setRenderedCards(updatedCards);
+        setScore((prev)=>prev+1);
+      }
+    else
+    {
+      //둘이 다른 id값을 가지고 있다면(다르다면)
+      setTimeout(()=>{
+        const updatedCards = JSON.parse(JSON.stringify(renderedCards));
+        updatedCards[clickedCards[0]].status = false;
+        updatedCards[clickedCards[1]].status = false;
+        setRenderedCards(updatedCards);
+      }
+      ,500)
+    }
+  }
+
   //clickedCards 지켜보고 있다가, 길이가 2가 되는 순간 로직 실행 (필수임. 렌더링 흐름과 달리, 즉시 반영함.)
   useEffect(()=> {
     if(clickedCards.length === 1)
@@ -137,25 +159,7 @@ function CardGame(){
       updatedCards[clickedCards[1]].status = true;
       setRenderedCards(updatedCards);
 
-      if(renderedCards[clickedCards[0]].id === renderedCards[clickedCards[1]].id) //카드 둘이 같은 id값을 가지고 있다면(일치한다면)
-        {
-          const updatedCards = JSON.parse(JSON.stringify(renderedCards)); //const updatedCards = [...renderedCards]; -> 절대 사용 x. 참조됨.
-          updatedCards[clickedCards[0]].status = true;
-          updatedCards[clickedCards[1]].status = true;
-          setRenderedCards(updatedCards);
-          setScore((prev)=>prev+1);
-        }
-      else
-      {
-        //둘이 다른 id값을 가지고 있다면(다르다면)
-        setTimeout(()=>{
-          const updatedCards = JSON.parse(JSON.stringify(renderedCards));
-          updatedCards[clickedCards[0]].status = false;
-          updatedCards[clickedCards[1]].status = false;
-          setRenderedCards(updatedCards);
-        }
-        ,500)
-      }
+      compareCard();
       setClickedCards([]); //빈 배열로 초기화 (if문 상관없이 실행, 재활용을 위해)
     }
   },[clickedCards])
