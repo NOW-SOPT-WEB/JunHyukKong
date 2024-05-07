@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 //filp = true/false (매칭여부에 따라서 결정된 값)
-function Card({idx, selectCard, imgSrc, isFlipped, clickedCards}) {  
+function Card({idx, selectCard, imgSrc, isFlipped}) {  
   const handleCard = () => {
     selectCard(parseInt(idx));
     }

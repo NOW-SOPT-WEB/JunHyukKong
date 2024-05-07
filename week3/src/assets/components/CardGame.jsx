@@ -83,7 +83,7 @@ function CardGame(){
    
 
   function resetCurrentMode(){ //mode가 변하거나, reset버튼이 눌리면 모든 것들 초기화 및 새로운 카드 배열 뽑아옴
-    let modeCards = getRandomList(mode, CARDLIST);//랜덤으로 현재 mode에 맞게 카드 개수를 맞춰 뽑아옴
+    const modeCards = getRandomList(mode, CARDLIST);//랜덤으로 현재 mode에 맞게 카드 개수를 맞춰 뽑아옴
     modeCards.push(...modeCards); //2배로 복사
     shuffleArr(modeCards); //랜덤으로 섞어줌
 

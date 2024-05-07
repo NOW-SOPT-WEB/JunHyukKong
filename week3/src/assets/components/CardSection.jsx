@@ -10,10 +10,9 @@ function CardSection({renderedCards, clickedCards, selectCard}){
           <Card 
           key ={`card-${idx}`} 
           idx = {`${idx}`} 
-          selectCard ={clickedCards.length < 2 ? selectCard: null} /*2보다 클 경우, 더이상 클릭하지 못하게 null을 반환 - 근데 내 코드상 필요 없긴 함*/
+          selectCard ={clickedCards.length < 2 && selectCard} /*단락 평가 이용, fasly만 나면 해당 피연산자 반환하고, truthy일 경우 오른쪽 피 연산자를 반환한다*/
           imgSrc={obj.imgSrc} 
           isFlipped = {renderedCards[idx].status} /*상태에 따라 플립 여부가 결정 */
-          clickedCards = {clickedCards}
           />
       );
     })}
