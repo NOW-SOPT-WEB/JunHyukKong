@@ -212,8 +212,9 @@ const CompleteModalWrapper = styled.div`
 
 //트러블슈팅(Troble Shotting) 왜 이 div의 height가 자식요소에 맞게 완전히 커지지 않는가? - 일부러 색깔 다르게 해서 디자인상 달라보이게 만듬
 const CardGameWrapper = styled.div`
-  position: relative;
   background-color: ${theme.colors.aliceblue};
+
+  height: fit-content;
 `;
 
 const ModeSelect = styled.div`

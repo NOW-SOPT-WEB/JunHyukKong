@@ -31,8 +31,9 @@ const StyledCardSection = styled.section`
   width: 100vw;
   min-height: 70vh;
 
-  position: relative;
-  top: 30vh;
+  //position: relative;
+  //top: 30vh;
+  margin-top: 30vh;
   
 `;
 export default CardSection;
