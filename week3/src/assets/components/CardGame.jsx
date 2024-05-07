@@ -75,10 +75,10 @@ function CardGame(){
   },[]);
 
  
-  const shuffleArr = useCallback((arr)=> {
+  const shuffleArr = (arr)=> {
     arr.sort(()=>Math.random() - 0.5); //0이상 1미만 까지의 숫자이므로 -0.5~0.5의 값을 이용한다.
   }
-  ,[])
+
 
    
 
