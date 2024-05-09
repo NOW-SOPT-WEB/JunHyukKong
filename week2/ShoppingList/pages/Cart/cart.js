@@ -101,6 +101,7 @@ function paintCartObj(obj)
   }
 }
 
+// innerHTML = "" 한번에 내용 제거(빈 문자열 대체)
 //이제 로컬스토리지에서 가져온 걸 순회하면서, 테이블에 작성할 예정
 function deleteCartObj(){ //그 전에, 렌더링 전에 존재하는 걸 삭제하는 로직 필요(필수,중요)
   const cartBody = document.getElementById("cartBody");
@@ -108,7 +109,7 @@ function deleteCartObj(){ //그 전에, 렌더링 전에 존재하는 걸 삭제
     cartBody.removeChild(cartBody.firstChild);
   }
 }
-
+/*그냥 빈 배열로 만든다음에, 필터링된 값만 로컬스토리지에 넣는다 (중요!)*/ 
 function renderCart() //deleteCartObj + (모든 상품 중에서, obj.cart === true인 상품만) paintCartObj 적용
 {
   deleteCartObj();

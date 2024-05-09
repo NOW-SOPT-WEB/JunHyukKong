@@ -15,7 +15,7 @@
   padding: 0;
 }
 body{
-  background: linear-gradient(to right, #000000, #c0c0c0);
+  background: linear-gradient(to right, #ffffff, #000000, #c0c0c0);
  /*body는 전체 문서의 크기이긴 하지만.. 
   딱 요소들이 있는 만큼만 차지한다(따로 정하지 않으면)
   그러나, background로 적용하면 전체에 적용된다. - 개념상 보이는 부분이 전부 body인 듯.
