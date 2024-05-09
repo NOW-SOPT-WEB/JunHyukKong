@@ -67,8 +67,8 @@ const handleClick = ( ) => {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login/>}></Route>
-          <Route path='/main' element={<Main/>}></Route>
-          <Route path='/mypage' element={<MyPage/>}></Route>
+          <Route path='/main/:memberId' element={<Main/>}></Route>
+          <Route path='/mypage/:memberId' element={<MyPage/>}></Route>
           <Route path='/signup' element={<SignUp/>}></Route>
         </Routes>
       </BrowserRouter>

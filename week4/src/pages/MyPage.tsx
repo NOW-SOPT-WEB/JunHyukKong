@@ -9,8 +9,9 @@ function MyPage(props:MyPagePropTypes)  : JSX.Element
 
 
   return (
-    <>
-    </>
+    <div>
+      마이페이지~
+    </div>
   );
 }
 

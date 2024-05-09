@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 interface LoginPropTypes{
   //만들면서 필요한 것 작성해나갈 예정
@@ -20,21 +21,25 @@ function Login(props: LoginPropTypes) : JSX.Element
   const idInputText = useRef<HTMLParagraphElement>();
   const pwInputText = useRef<HTMLParagraphElement>();
 
+  const navigate = useNavigate();
+
   
   useEffect(()=>{
     console.log(1);
     if(isEmptyId === true){
       alert("id 입력하세요.");
       idInput.current.focus(); //idInput.current는 undefined일 수 있습니다..?
-      idInputText.current.innerText = "아이디를 입력하세요.";
-      pwInputText.current.innerText = "";
+      idInputText.current.value = "";
+      //idInputText.current.innerText = "아이디를 입력하세요.";
+      //pwInputText.current.innerText = "";
 
     }
     else if(isEmptyPw){
       alert("pw 입력하세요.");
       pwInput.current.focus();
-      pwInputText.current.innerText = "비밀번호를 입력하세요.";
-      idInputText.current.innerText = "";
+      pwInputText.current.value = "";
+      //pwInputText.current.innerText = "비밀번호를 입력하세요.";
+      //idInputText.current.innerText = "";
 
     }
   },[isEmptyId, isEmptyPw])
@@ -70,12 +75,18 @@ function Login(props: LoginPropTypes) : JSX.Element
             password : userPw 
           }
           );
-          //console.log("진행은 잘됨",data);
+          const memberId = data.headers.location;
+          navigate(`/main/${memberId}`); //위에서 정상적으로 성공했다면 navigate됨(아니라면 바로 catch로 넘어갈거임)
         }
         catch(error:any){ //만약 틀려먹었을 경우, 에러 객체를 던져줌. (그걸 콘솔에 찍어보고, 필요한 데이터를 뽑아내면 됨)
-          console.log(error);
-          console.log(error.response.status);
-          console.log(error.response.data.message);
+          //console.log(error);
+          //console.log(error.response.status);
+          //console.log(error.response.data.message);
+          alert(error.response.data.message);
+
+          //그리고 내용들 지워버림
+          idInput.current.value = ""; 
+          pwInput.current.value = "";
         }
         
       }
@@ -97,6 +108,10 @@ function Login(props: LoginPropTypes) : JSX.Element
     setUserPw((prev)=>e.target.value);
     console.log(userPw);
   }
+
+  function handleClickBtn(){
+    navigate("/signup");
+  }
   
 
   return (
@@ -114,9 +129,8 @@ function Login(props: LoginPropTypes) : JSX.Element
         <Styledp ref={pwInputText}></Styledp>
         <BtnWrapper>
           <LoginBtn onClick={handleSubmitForm}>로그인</LoginBtn> 
-          <SignUpBtn>회원가입</SignUpBtn>
+          <SignUpBtn onClick={handleClickBtn}>회원가입</SignUpBtn>
         </BtnWrapper>
-        
       </LoginLogic>
         
       </LoginForm>
@@ -202,7 +216,7 @@ const PwInput = styled.input`
 
   &:focus{
     outline: none;
-    border: 1px solid red;
+    border: 2px solid red;
   }
 `;
 
