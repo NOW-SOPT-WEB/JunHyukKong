@@ -76,6 +76,8 @@ function Login(props: LoginPropTypes) : JSX.Element
           }
           );
           const memberId = data.headers.location;
+          console.log(data);
+          alert(data.data.message);
           navigate(`/main/${memberId}`); //위에서 정상적으로 성공했다면 navigate됨(아니라면 바로 catch로 넘어갈거임)
         }
         catch(error:any){ //만약 틀려먹었을 경우, 에러 객체를 던져줌. (그걸 콘솔에 찍어보고, 필요한 데이터를 뽑아내면 됨)
