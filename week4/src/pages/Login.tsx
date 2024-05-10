@@ -149,8 +149,8 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 
-width: 40vw;
-height: 90vh;
+width: 30vw;
+height: 70vh;
 background-image: conic-gradient(from -38deg at 50% 50%, #fff 0deg, #999 360deg);
 
 `;
@@ -255,6 +255,10 @@ const LoginBtn = styled.button`
   border: 1px dotted grey;
   border-radius: 0.5rem;
   margin-top: 1rem;
+
+  &:hover{
+    background-color: silver;
+  }
 `;
 
 const SignUpBtn = styled.button`
@@ -267,6 +271,10 @@ const SignUpBtn = styled.button`
   border: 1px dotted grey;
   border-radius: 0.5rem;
   margin-top: 1rem;
+
+  &:hover{
+    background-color: silver;
+  }
 `;
 
 const Styledp = styled.p`

@@ -350,6 +350,10 @@ const SignUpBtn = styled.button`
   border: 1px dotted grey;
   border-radius: 0.5rem;
   margin-top: 1rem;
+
+  &:hover{
+    background-color: silver;
+  }
 `;
 
 
