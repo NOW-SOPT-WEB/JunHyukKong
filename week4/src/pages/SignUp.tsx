@@ -119,6 +119,13 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
           pwInput.current.value = "";
           nameInput.current.value = "";
           phoneInput.current.value = "";
+
+          //이 아래의 초기화 부분들을 해주어야 한다. 안해주면, 바로 회원가입 다시 누르면 또다시 같은 에러(전화번호 형식 맞춰달라는 에러)만 뜬다 - 즉, 안 지워진것!
+          //물론 값을 입력하면 해결 되긴 하지만 결국 취약점이 있으니 잘 판단해야 함
+          setUserId("");
+          setUserName("");
+          setUserPhone("");
+          setUserPw("");
         }
         
       }

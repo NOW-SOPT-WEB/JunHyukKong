@@ -87,6 +87,8 @@ function Login(props: LoginPropTypes) : JSX.Element
           //그리고 내용들 지워버림
           idInput.current.value = ""; 
           pwInput.current.value = "";
+          setUserId("");
+          setUserPw("");
         }
         
       }
