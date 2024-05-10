@@ -111,6 +111,7 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
           );
           console.log(data);
           const memberId= data.headers.location;
+          alert(data.data.message);
           navigate(`/main/${memberId}`);
           
         }
