@@ -174,13 +174,14 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
   }
 
   return (
-    <>
-       <SignUpPage>
+    
+    <SignUpPage>
+      <SignUpWrapper>
+        <SignUpHeader>
+          <h1>SignUp</h1>
+          <FontAwesomeIcon icon={faUserPlus} fontSize={`4rem`} bounce/> {/*individual import를 잘 살피기! 추가로 공식 문서 잘 읽기) https://docs.fontawesome.com/web/style/size */}
+        </SignUpHeader>
         <SignUpForm onSubmit={handleSubmitForm}>
-          <SignUpHeader>
-            <h1>SignUp</h1>
-            <FontAwesomeIcon icon={faUserPlus} fontSize={`4rem`} bounce/> {/*individual import를 잘 살피기! 추가로 공식 문서 잘 읽기) https://docs.fontawesome.com/web/style/size */}
-          </SignUpHeader>
           <SignUpLogic>
             <FlexDiv>
               <InputName>ID</InputName>
@@ -192,8 +193,7 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
               <ColFlexDiv>
                 <CustomInput ref={pwInput} type="password" onChange={handleChangePwInput} type="text" placeholder="Pw 입력해주세요" />
                 <Styledp ref={pwInputText}>{"비밀번호 형식은 8자이상, 숫자, 특수문자, 영어 알파벳이 포함되어야 합니다."}</Styledp>
-              </ColFlexDiv>
-              
+              </ColFlexDiv>  
             </FlexDiv>
 
             <FlexDiv>
@@ -208,17 +208,31 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
                 <Styledp ref={phoneInputText}>{"전화번호 형식은 010-xxxx-xxxx입니다."}</Styledp>
               </ColFlexDiv>
             </FlexDiv>
-
-            <BtnWrapper>
-              <SignUpBtn >회원가입</SignUpBtn> 
-              <SignUpBtn onClick={handleClickBtn}>뒤로가기</SignUpBtn>
-            </BtnWrapper>
           </SignUpLogic>
         </SignUpForm>
+        <BtnWrapper> {/*얘내 둘은 바깥쪽으로 form 바깥쪽으로 뺴는게 맞는거 같음. 회원가입은 안에 있어도 되는데, 뒤로가기 버튼은 제출이 안되게 해야함 */}
+          <SignUpBtn onClick={handleSubmitForm}>회원가입</SignUpBtn> 
+          <SignUpBtn onClick={handleClickBtn}>뒤로가기</SignUpBtn>
+        </BtnWrapper>
+      </SignUpWrapper>
     </SignUpPage>
-    </>
+    
   );
 }
+
+const SignUpWrapper = styled.div`
+  position: relative;
+
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+width: 40vw;
+height: 90vh;
+background-image: conic-gradient(from -38deg at 50% 50%, #fff 0deg, #999 360deg);
+
+`;
 
 const ColFlexDiv = styled.div`
   display: flex;
@@ -282,10 +296,9 @@ const SignUpForm = styled.form`
   justify-content: center;
   align-items: center;
 
-  width: 40vw;
-  height: 90vh;
-  background-image: conic-gradient(from -38deg at 50% 50%, #fff 0deg, #999 360deg);
-
+  width: 100%;
+  height: 100%;
+  //background-image: conic-gradient(from -38deg at 50% 50%, #fff 0deg, #999 360deg);
 `;
 
 const SignUpPage = styled.div`
@@ -315,6 +328,9 @@ const CustomInput = styled.input`
 
 
 const BtnWrapper = styled.div`
+  position: absolute;
+  bottom: 3rem;
+  
   display: flex;
   width: 100%;
   
@@ -324,11 +340,12 @@ const BtnWrapper = styled.div`
 `;
 
 const SignUpBtn = styled.button`
+  
   width: 5rem;
   height: 2rem;
 
   width: 20%;
-  height: 10%;
+  height: 100%;
 
   border: 1px dotted grey;
   border-radius: 0.5rem;
