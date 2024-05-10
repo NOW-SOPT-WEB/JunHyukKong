@@ -116,31 +116,44 @@ function Login(props: LoginPropTypes) : JSX.Element
 
   return (
     <LoginPage>
-      
-      <LoginForm onSubmit={handleSubmitForm}>
-      <LoginHeader>
-        <h1>Login</h1>
-        <FontAwesomeIcon icon={faRightToBracket} fontSize={`4rem`} fade/> {/*individual import를 잘 살피기! 추가로 공식 문서 잘 읽기) https://docs.fontawesome.com/web/style/size */}
-      </LoginHeader>
-      <LoginLogic>
-        <IdInput ref={idInput} onChange={handleChangeIdInput}  type="text" placeholder="Id 입력해주세요" required/>
-        <Styledp ref={idInputText}></Styledp>
-        <PwInput ref={pwInput} type="password" onChange={handleChangePwInput} type="text" placeholder="Pw 입력해주세요" required/>
-        <Styledp ref={pwInputText}></Styledp>
+      <SignUpWrapper>
+        <LoginHeader>
+          <h1>Login</h1>
+          <FontAwesomeIcon icon={faRightToBracket} fontSize={`4rem`} fade/> {/*individual import를 잘 살피기! 추가로 공식 문서 잘 읽기) https://docs.fontawesome.com/web/style/size */}
+        </LoginHeader>
+        <LoginForm onSubmit={handleSubmitForm}>
+          <LoginLogic>
+            <IdInput ref={idInput} onChange={handleChangeIdInput}  type="text" placeholder="Id 입력해주세요" required/>
+            <Styledp ref={idInputText}></Styledp>
+            <PwInput ref={pwInput} type="password" onChange={handleChangePwInput} type="text" placeholder="Pw 입력해주세요" required/>
+            <Styledp ref={pwInputText}></Styledp>
+          </LoginLogic>
+        </LoginForm>
         <BtnWrapper>
           <LoginBtn onClick={handleSubmitForm}>로그인</LoginBtn> 
           <SignUpBtn onClick={handleClickBtn}>회원가입</SignUpBtn>
         </BtnWrapper>
-      </LoginLogic>
-        
-      </LoginForm>
-      
+      </SignUpWrapper>
     </LoginPage>
   );
 }
 
 export default Login;
 
+
+const SignUpWrapper = styled.div`
+position: relative;
+
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+width: 40vw;
+height: 90vh;
+background-image: conic-gradient(from -38deg at 50% 50%, #fff 0deg, #999 360deg);
+
+`;
 
 const LoginLogic = styled.div`
   position: absolute;
@@ -179,9 +192,9 @@ const LoginForm = styled.form`
   justify-content: center;
   align-items: center;
 
-  width: 30vw;
-  height: 70vh;
-  background-image: conic-gradient(from -38deg at 50% 50%, #fff 0deg, #999 360deg);
+  width: 100%;
+  height: 100%;
+  
 
 `;
 
@@ -221,6 +234,9 @@ const PwInput = styled.input`
 `;
 
 const BtnWrapper = styled.div`
+  position: absolute;
+  bottom: 3rem;
+
   display: flex;
   width: 100%;
   
@@ -246,7 +262,7 @@ const SignUpBtn = styled.button`
   height: 2rem;
 
   width: 20%;
-  height: 10%;
+  height: 100%;
 
   border: 1px dotted grey;
   border-radius: 0.5rem;
