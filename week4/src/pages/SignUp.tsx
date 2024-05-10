@@ -32,29 +32,40 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
   const phoneInput = useRef<HTMLInputElement>();
   const phoneInputText = useRef<HTMLParagraphElement>();
 
- 
-  
-  
-
-
   const navigate = useNavigate();
 
-  /*
+  
   useEffect(()=>{
     console.log(1);
     if(isEmptyId === true){
       alert("id 입력하세요.");
       idInput.current.focus(); //idInput.current는 undefined일 수 있습니다..?
-      
-
     }
     else if(isEmptyPw){
       alert("pw 입력하세요.");
       pwInput.current.focus();
     }
-  },[isEmptyId, isEmptyPw])
-  */
-
+    else if(isEmptyName){
+      alert("닉네임을 입력하세요.");
+      nameInput.current.focus();
+    }
+    else if(isEmptyPhone){
+      alert("전화번호를 입력하세요.");
+      phoneInput.current.focus();
+    }
+  },[isEmptyId, isEmptyPw, isEmptyName, isEmptyPhone])
+  
+  function validatePassword(password: string):boolean
+  {
+    if(password.length < 8 || !password.match(/\d/) || !password.match(/[^a-zA-Z\d]/) || !password.match(/[a-z]/) && !password.match(/[A-Z]/) )
+    {
+      return false;
+    }
+    else
+    {
+      return true;
+    }
+  }
 
   function handleSubmitForm(e:React.FormEvent) //제출을 할 시, API 요청으로 정보 입력하고 받아오는 과정 
   {
@@ -71,8 +82,23 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
         setIsEmptyPw(true);
         setTimeout(()=>setIsEmptyPw(false),500);
       }
+      else if(userName === "")
+      {
+        setIsEmptyName(true);
+        setTimeout(()=>setIsEmptyName(false),500);
+      }
+      else if(userPhone === "")
+      {
+        setIsEmptyPhone(true);
+        setTimeout(()=>setIsEmptyPhone(false),500);
+      }
       else
       {
+        if(!validatePassword(userPw)) //검증 결과 false(-> true) 가 나오면
+        {
+          alert("비밀번호 형식은 8자이상, 숫자, 특수문자, 영어 알파벳이 포함되어야 합니다.");
+          return;
+        }
         try {
           const data = await axios.post(`http://34.64.233.12:8080/member/join`
           ,{
@@ -93,7 +119,6 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
           pwInput.current.value = "";
           nameInput.current.value = "";
           phoneInput.current.value = "";
-
         }
         
       }
