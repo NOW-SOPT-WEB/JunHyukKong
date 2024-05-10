@@ -57,6 +57,7 @@ function SignUp(props:SignUpPropTypes) : JSX.Element
   
   function validatePassword(password: string):boolean
   {
+    //조건들을 정규식을 활용하여, 나열. 
     if(password.length < 8 || !password.match(/\d/) || !password.match(/[^a-zA-Z\d]/) || !password.match(/[a-z]/) && !password.match(/[A-Z]/) )
     {
       return false;
