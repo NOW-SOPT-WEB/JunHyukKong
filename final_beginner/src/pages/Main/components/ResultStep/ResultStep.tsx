@@ -3,10 +3,21 @@ import { webber } from "../../../../constants/webber";
 
 interface ResultStepPropTypes {
   chooseObj: any[];
+  setStep: (num: number) => void;
+  setChooseObj: (obj: any[]) => void;
 }
 
-const ResultStep = ({ chooseObj }: ResultStepPropTypes) => {
+const ResultStep = ({
+  chooseObj,
+  setStep,
+  setChooseObj,
+}: ResultStepPropTypes) => {
   console.log(chooseObj);
+
+  const handleClickRetry = () => {
+    setStep(0);
+    setChooseObj([]);
+  };
 
   // chooseObj 예시: ['fun', true, false, true]
   const filteredPerson = webber.find(
@@ -18,14 +29,17 @@ const ResultStep = ({ chooseObj }: ResultStepPropTypes) => {
   );
 
   if (!filteredPerson) {
-    return <div>No matching person found</div>;
+    return <div>사람이 없습니다!</div>;
   }
 
   return (
-    <PersonWrapper>
-      <Pic src={filteredPerson.imgSrc} alt={filteredPerson.personName} />
-      <Name>{filteredPerson.personName}</Name>
-    </PersonWrapper>
+    <>
+      <PersonWrapper>
+        <Pic src={filteredPerson.imgSrc} alt={filteredPerson.personName} />
+        <Name>{filteredPerson.personName}</Name>
+      </PersonWrapper>
+      <SelectBtn onClick={handleClickRetry}>다시하기</SelectBtn>
+    </>
   );
 };
 
@@ -37,7 +51,7 @@ const PersonWrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  height: 70%;
 `;
 
 const Pic = styled.img`
@@ -51,4 +65,15 @@ const Name = styled.div`
   ${({ theme }) => theme.fonts.title_18pt_Bold};
   margin-top: 3rem;
   border: red 3px solid;
+`;
+
+const SelectBtn = styled.button`
+  width: 10%;
+  height: 15%;
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.colors.Primary_orange};
+
+  &:hover {
+    background-color: red;
+  }
 `;

@@ -46,7 +46,7 @@ const Body = ({
     console.log(step);
     switch (step) {
       case -2:
-        return <RandomStep />;
+        return <RandomStep setStep={setStep} />;
       case -1:
         return (
           <>
@@ -112,7 +112,13 @@ const Body = ({
           />
         );
       case 5:
-        return <ResultStep chooseObj={chooseObj} />;
+        return (
+          <ResultStep
+            chooseObj={chooseObj}
+            setStep={setStep}
+            setChooseObj={setChooseObj}
+          />
+        );
       default:
         return <div>에러</div>;
     }

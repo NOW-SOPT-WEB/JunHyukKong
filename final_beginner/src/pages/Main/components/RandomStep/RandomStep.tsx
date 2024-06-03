@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { webber } from "../../../../constants/webber";
 
-const RandomStep = () => {
+interface RandomStepPropTypes {
+  setStep: (num: number) => void;
+}
+
+const RandomStep = ({ setStep }: RandomStepPropTypes) => {
   const randomId = Math.floor(Math.random() * 24);
   const randomPerson = webber.find((person) => person.id === randomId);
   const [counter, setCounter] = useState<number>(3);
@@ -16,15 +20,22 @@ const RandomStep = () => {
       }, 1000);
     }
   }, [counter]);
+
+  const handleClickRetry = () => {
+    setStep(-1);
+  };
   return (
     <>
       {counter > 0 ? (
         <Counter>{counter}</Counter>
       ) : (
-        <PersonWrapper>
-          <Pic src={randomPerson.imgSrc} alt={randomPerson.personName} />
-          <Name>{randomPerson.personName}</Name>
-        </PersonWrapper>
+        <>
+          <PersonWrapper>
+            <Pic src={randomPerson.imgSrc} alt={randomPerson.personName} />
+            <Name>{randomPerson.personName}</Name>
+          </PersonWrapper>
+          <SelectBtn onClick={handleClickRetry}>다시하기</SelectBtn>
+        </>
       )}
     </>
   );
@@ -38,7 +49,7 @@ const PersonWrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  height: 70%;
 `;
 
 const Pic = styled.img`
@@ -52,6 +63,17 @@ const Name = styled.div`
   ${({ theme }) => theme.fonts.title_18pt_Bold};
   margin-top: 3rem;
   border: red 3px solid;
+`;
+
+const SelectBtn = styled.button`
+  width: 10%;
+  height: 15%;
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.colors.Primary_orange};
+
+  &:hover {
+    background-color: red;
+  }
 `;
 
 const Counter = styled.div`
