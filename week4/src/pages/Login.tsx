@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import useLogin from "../hooks/useLogin";
 
 interface LoginPropTypes{
   //만들면서 필요한 것 작성해나갈 예정
@@ -12,111 +13,21 @@ interface LoginPropTypes{
 
 function Login(props: LoginPropTypes) : JSX.Element
 {
-  const [userId, setUserId] = useState("");
-  const [userPw, setUserPw] = useState(""); 
-  const [isEmptyId, setIsEmptyId] = useState(false);
-  const [isEmptyPw, setIsEmptyPw] = useState(false);
-  const idInput = useRef<HTMLInputElement>();
-  const pwInput = useRef<HTMLInputElement>();
-  const idInputText = useRef<HTMLParagraphElement>();
-  const pwInputText = useRef<HTMLParagraphElement>();
+  const {
+    userId,
+    userPw,
+    isEmptyId,
+    isEmptyPw,
+    idInput,
+    pwInput,
+    idInputText,
+    pwInputText,
+    handleSubmitForm,
+    handleChangeIdInput,
+    handleChangePwInput,
+    handleClickBtn
+  } = useLogin();
 
-  const navigate = useNavigate();
-
-  
-  useEffect(()=>{
-    console.log(1);
-    if(isEmptyId === true){
-      alert("id 입력하세요.");
-      idInput.current.focus(); //idInput.current는 undefined일 수 있습니다..?
-      idInputText.current.value = "";
-      //idInputText.current.innerText = "아이디를 입력하세요.";
-      //pwInputText.current.innerText = "";
-
-    }
-    else if(isEmptyPw){
-      alert("pw 입력하세요.");
-      pwInput.current.focus();
-      pwInputText.current.value = "";
-      //pwInputText.current.innerText = "비밀번호를 입력하세요.";
-      //idInputText.current.innerText = "";
-
-    }
-  },[isEmptyId, isEmptyPw])
-  
-
-
-  function handleSubmitForm(e:React.FormEvent) //제출을 할 시, API 요청으로 정보 입력하고 받아오는 과정 
-  {
-    e.preventDefault();
-    console.log(2);
-
-    const fetchData = async() => {
-      if(userId === "")
-      {
-        setIsEmptyId(true);
-        setTimeout(()=>setIsEmptyId(false),500); //이걸 해줘야만, 계속 경고문구가 뜨게 할 수 있다.
-        console.log(3);
-      }
-      else if(userPw ==="")
-      {
-        setIsEmptyPw(true);
-        setTimeout(()=>setIsEmptyPw(false),500);
-        console.log(4);
-      }
-      else
-      {
-        console.log(5);
-        try {
-          console.log(6);
-          const data = await axios.post(`http://34.64.233.12:8080/member/login`
-          ,{
-            authenticationId : userId,
-            password : userPw 
-          }
-          );
-          const memberId = data.headers.location;
-          console.log(data);
-          alert(data.data.message);
-          navigate(`/main/${memberId}`); //위에서 정상적으로 성공했다면 navigate됨(아니라면 바로 catch로 넘어갈거임)
-        }
-        catch(error:any){ //만약 틀려먹었을 경우, 에러 객체를 던져줌. (그걸 콘솔에 찍어보고, 필요한 데이터를 뽑아내면 됨)
-          //console.log(error);
-          //console.log(error.response.status);
-          //console.log(error.response.data.message);
-          alert(error.response.data.message);
-
-          //그리고 내용들 지워버림
-          idInput.current.value = ""; 
-          pwInput.current.value = "";
-          setUserId("");
-          setUserPw("");
-        }
-        
-      }
-      
-    }
-    fetchData();
-        
-      
-  }
-
-  function handleChangeIdInput(e: React.ChangeEvent<HTMLInputElement>)
-  {
-    setUserId((prev)=>e.target.value);
-    console.log(userId);
-  }
-
-  function handleChangePwInput(e: React.ChangeEvent<HTMLInputElement>)
-  {
-    setUserPw((prev)=>e.target.value);
-    console.log(userPw);
-  }
-
-  function handleClickBtn(){
-    navigate("/signup");
-  }
-  
 
   return (
     <LoginPage>
