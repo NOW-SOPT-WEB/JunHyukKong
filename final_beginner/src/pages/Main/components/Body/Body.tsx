@@ -7,12 +7,16 @@ import RandomStep from "../RandomStep/RandomStep";
 import ResultStep from "../ResultStep/ResultStep";
 import SecondStep from "../SecondStep/SecondStep";
 import ThirdStep from "../ThirdStep/ThirdStep";
+import { Dispatch, SetStateAction } from "react"; //적절한 타입을 사용하기 위해 가져와야 함
+
 
 interface BodyPropTypes {
   isInit: boolean;
   //혹은, 곧바로 넘겨주고 싶으면 이처럼 작성
-  setShowInitBtn: (isShow: boolean) => void;
-  setInit: (isInit: boolean) => void;
+  //setShowInitBtn: (isShow: boolean) => void;
+  setShowInitBtn: Dispatch<SetStateAction<boolean>>;
+  //setInit: (isInit: boolean) => void;
+  setInit: Dispatch<SetStateAction<boolean>>;
   setChooseObj: (callBackFunc: (prevObj: Array<any>) => Array<any>) => void;
   setStep: (callBackFunc: (prevStep: number) => number) => void;
   step: number;
